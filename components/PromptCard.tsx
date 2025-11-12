@@ -55,11 +55,11 @@ const PromptCard: React.FC<PromptCardProps> = ({ prompt, onEdit, onDelete, onCop
       <div className="flex justify-between items-start">
         <h2 className="text-lg font-bold text-white">{prompt.title}</h2>
       </div>
-      <div className="flex-1 overflow-hidden relative">
+      <div className="flex-1 overflow-hidden relative bg-blue-950 rounded p-2">
         <p className="text-gray-300 text-sm whitespace-pre-wrap font-mono select-none">
           {prompt.prompt}
         </p>
-        <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-gray-800 to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-blue-950 to-transparent pointer-events-none" />
       </div>
 
       {longPressActive && (

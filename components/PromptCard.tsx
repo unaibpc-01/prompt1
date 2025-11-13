@@ -59,7 +59,6 @@ const PromptCard: React.FC<PromptCardProps> = ({ prompt, onEdit, onDelete, onCop
         <p className="text-gray-300 text-sm whitespace-pre-wrap font-mono select-none">
           {prompt.prompt}
         </p>
-        <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-gray-600 to-transparent pointer-events-none" />
       </div>
 
       {longPressActive && (

@@ -55,7 +55,7 @@ const PromptCard: React.FC<PromptCardProps> = ({ prompt, onEdit, onDelete, onCop
       <div className="flex justify-between items-start px-2 pt-1">
         <h2 className="text-lg font-bold text-white">{prompt.title}</h2>
       </div>
-      <div className="flex-1 overflow-hidden relative rounded-2xl p-1.5 bg-gray-600 border-2 border-black mx-2 mb-2">
+      <div className="flex-1 overflow-hidden relative rounded-2xl p-1.5 bg-gray-700 border-2 border-black mx-2 mb-2">
         <p className="text-gray-300 text-sm whitespace-pre-wrap font-mono select-none">
           {prompt.prompt}
         </p>

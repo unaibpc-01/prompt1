@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import type { Prompt } from './types';
 import SearchInput from './components/SearchInput';
 import PromptList from './components/PromptList';
@@ -8,21 +8,25 @@ import PromptModal from './components/PromptModal';
 import Toast from './components/Toast';
 import { supabase } from './supabaseClient';
 
-
 const App: React.FC = () => {
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPrompt, setEditingPrompt] = useState<Prompt | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPrompts = async () => {
-      const { data, error } = await supabase.from('prompts').select('*');
-      if (error) {
-        console.error('Error fetching prompts:', error);
-      } else {
-        setPrompts(data || []);
+      try {
+        const { data, error } = await supabase.from('prompts').select('*');
+        if (error) {
+          console.error('Error fetching prompts:', error);
+        } else {
+          setPrompts(data || []);
+        }
+      } finally {
+        setLoading(false);
       }
     };
     fetchPrompts();
@@ -35,27 +39,27 @@ const App: React.FC = () => {
     });
   }, [prompts, searchTerm]);
 
-  const showToast = (message: string) => {
+  const showToast = useCallback((message: string) => {
     setToastMessage(message);
     setTimeout(() => setToastMessage(null), 3000);
-  };
+  }, []);
 
-  const handleCopy = (text: string) => {
+  const handleCopy = useCallback((text: string) => {
     navigator.clipboard.writeText(text);
     showToast('Prompt copied to clipboard!');
-  };
+  }, [showToast]);
 
-  const handleOpenModal = (prompt: Prompt | null = null) => {
+  const handleOpenModal = useCallback((prompt: Prompt | null = null) => {
     setEditingPrompt(prompt);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
     setEditingPrompt(null);
-  };
+  }, []);
 
-  const handleSavePrompt = async (promptToSave: Omit<Prompt, 'id'> & { id?: string }) => {
+  const handleSavePrompt = useCallback(async (promptToSave: Omit<Prompt, 'id'> & { id?: string }) => {
     if (promptToSave.id) {
       const { error } = await supabase.from('prompts').update(promptToSave).eq('id', promptToSave.id);
       if (error) {
@@ -77,9 +81,9 @@ const App: React.FC = () => {
       }
     }
     handleCloseModal();
-  };
+  }, [prompts, handleCloseModal, showToast]);
   
-  const handleDelete = async (id: string) => {
+  const handleDelete = useCallback(async (id: string) => {
     const { error } = await supabase.from('prompts').delete().eq('id', id);
     if (error) {
       console.error('Error deleting prompt:', error);
@@ -88,7 +92,7 @@ const App: React.FC = () => {
       setPrompts(prompts.filter(p => p.id !== id));
       showToast('Prompt deleted.');
     }
-  };
+  }, [prompts, showToast]);
 
   return (
     <div className="bg-gray-900 text-white min-h-screen font-sans">
@@ -97,12 +101,18 @@ const App: React.FC = () => {
           <div className="my-6">
             <SearchInput value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
           </div>
-          <PromptList
-            prompts={filteredPrompts}
-            onEdit={handleOpenModal}
-            onDelete={handleDelete}
-            onCopy={handleCopy}
-          />
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="text-gray-400">Loading prompts...</div>
+            </div>
+          ) : (
+            <PromptList
+              prompts={filteredPrompts}
+              onEdit={handleOpenModal}
+              onDelete={handleDelete}
+              onCopy={handleCopy}
+            />
+          )}
         </main>
       </div>
       <FloatingActionButton onClick={() => handleOpenModal()} />

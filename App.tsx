@@ -1,12 +1,13 @@
 
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, lazy, Suspense } from 'react';
 import type { Prompt } from './types';
 import SearchInput from './components/SearchInput';
 import PromptList from './components/PromptList';
 import FloatingActionButton from './components/FloatingActionButton';
-import PromptModal from './components/PromptModal';
 import Toast from './components/Toast';
 import { supabase } from './supabaseClient';
+
+const PromptModal = lazy(() => import('./components/PromptModal'));
 
 const App: React.FC = () => {
   const [prompts, setPrompts] = useState<Prompt[]>([]);
@@ -116,12 +117,14 @@ const App: React.FC = () => {
         </main>
       </div>
       <FloatingActionButton onClick={() => handleOpenModal()} />
-      <PromptModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        onSave={handleSavePrompt}
-        promptToEdit={editingPrompt}
-      />
+      <Suspense fallback={null}>
+        <PromptModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSave={handleSavePrompt}
+          promptToEdit={editingPrompt}
+        />
+      </Suspense>
       {toastMessage && <Toast message={toastMessage} />}
     </div>
   );

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { memo } from 'react';
 import { SearchIcon } from './icons';
 
 interface SearchInputProps {
@@ -7,7 +7,7 @@ interface SearchInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ value, onChange }) => {
+const SearchInput: React.FC<SearchInputProps> = memo(({ value, onChange }) => {
   return (
     <div className="relative">
       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -22,6 +22,6 @@ const SearchInput: React.FC<SearchInputProps> = ({ value, onChange }) => {
       />
     </div>
   );
-};
+});
 
 export default SearchInput;

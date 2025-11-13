@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, memo } from 'react';
 import type { Prompt } from '../types';
 import { EditIcon, DeleteIcon } from './icons';
 
@@ -9,7 +9,7 @@ interface PromptCardProps {
   onCopy: () => void;
 }
 
-const PromptCard: React.FC<PromptCardProps> = ({ prompt, onEdit, onDelete, onCopy }) => {
+const PromptCard: React.FC<PromptCardProps> = memo(({ prompt, onEdit, onDelete, onCopy }) => {
   const [longPressActive, setLongPressActive] = useState(false);
   const timerRef = useRef<number>();
   const isLongPress = useRef(false);
@@ -89,6 +89,6 @@ const PromptCard: React.FC<PromptCardProps> = ({ prompt, onEdit, onDelete, onCop
       )}
     </div>
   );
-};
+});
 
 export default PromptCard;

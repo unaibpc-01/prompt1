@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { memo } from 'react';
 import type { Prompt } from '../types';
 import PromptCard from './PromptCard';
 
@@ -10,7 +10,7 @@ interface PromptListProps {
   onCopy: (text: string) => void;
 }
 
-const PromptList: React.FC<PromptListProps> = ({ prompts, onEdit, onDelete, onCopy }) => {
+const PromptList: React.FC<PromptListProps> = memo(({ prompts, onEdit, onDelete, onCopy }) => {
   if (prompts.length === 0) {
     return (
       <div className="text-center py-16">
@@ -33,6 +33,6 @@ const PromptList: React.FC<PromptListProps> = ({ prompts, onEdit, onDelete, onCo
       ))}
     </div>
   );
-};
+});
 
 export default PromptList;

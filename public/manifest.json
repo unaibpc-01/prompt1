@@ -1,0 +1,16 @@
+{
+  "name": "Prompt Saver",
+  "short_name": "PromptSaver",
+  "description": "Save, organize, and access your favorite AI prompts instantly",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#1f2937",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
